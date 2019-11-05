@@ -3,45 +3,39 @@
     <h1
       class="display-1 text-center teal--text text--darken-4 font-weight-regular"
       style="margin-bottom: 50px"
-    >Currently ordering</h1>
+    >My Orders</h1>
     <v-container
       style="margin-bottom: 50px; max-width: 1000px; background-color: white; border-radius: 4px;"
       class="elevation-6"
     >
-      <Order
+      <MyOrder
         v-for="order in orders"
         :key="order.id"
-        :oid="order.id"
         :foodPlace="order.restaurant"
-        :name="order.user_name"
+        :oid="order.id"
         :comm="order.comment"
       />
-      
+      <v-btn color="green" dark x-large fixed bottom right fab>
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
     </v-container>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import Order from "@/components/Order.vue";
+import MyOrder from "../components/MyOrder";
 export default {
-  data() {
-    return {
-     
-    };
-  },
   components: {
-    Order
+    MyOrder
   },
   computed: {
-    ...mapGetters(["getterOrders"]),
     orders() {
-      let orders = this.getterOrders;
+      var orders = this.$store.state.myorders;
       return orders;
     }
   },
   mounted() {
-    this.$store.dispatch("getOrders");
+    this.$store.dispatch("getMyOrders");
   }
 };
 </script>

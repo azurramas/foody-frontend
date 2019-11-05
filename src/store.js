@@ -3,7 +3,6 @@ import Vuex from "vuex";
 import axios from "axios";
 
 //Function to get cookie by name
-
 function getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
@@ -25,6 +24,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     orders: [],
+    myorders: [],
+    requests: [],
     service: "http://localhost:8010",
     user: {
       username: ""
@@ -53,6 +54,13 @@ export default new Vuex.Store({
       this.state.snackbar.status = payload.status;
       this.state.snackbar.message = payload.msg;
       this.state.snackbar.color = payload.color;
+    },
+    saveMyOrders(state, payload) {
+      this.state.myorders = payload;
+    },
+    saveRequests(state, payload) {
+      var requests = [payload.oid, payload.data]
+      this.state.requests.push(requests);
     }
   },
   actions: {
@@ -92,7 +100,6 @@ export default new Vuex.Store({
       window.location = "/login";
     },
     sendRequest(context, payload) {
-      console.log(payload);
       return new axios.post(
         this.state.service + "/request/" + payload.order_id,
         payload
@@ -100,7 +107,7 @@ export default new Vuex.Store({
         .then(() => {
           var snackbar = {
             status: true,
-            msg: "Your request was successful!",
+            msg: "Your request was sent successfully!",
             color: "success"
           };
           context.commit("requestErr", snackbar);
@@ -113,6 +120,32 @@ export default new Vuex.Store({
           };
           context.commit("requestErr", snackbar);
         });
+    },
+    getMyOrders(context) {
+      return new axios.get(this.state.service + "/user/order", {
+        headers: {
+          Authorization: getCookie("token")
+        }
+      })
+        .then(res => {
+          context.commit("saveMyOrders", res.data);
+        })
+        .catch(err => console.error(err));
+    },
+    getRequests(context, oid) {
+      return new axios.get(this.state.service + "/requests/" + oid, {
+        headers: {
+          Authorization: getCookie("token")
+        }
+      })
+        .then(res => {
+          var request = {
+            oid: oid,
+            data: res.data
+          }
+          context.commit("saveRequests", request);
+        })
+        .catch(err => console.error(err));
     }
   },
   modules: {},
