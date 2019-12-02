@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-simple-table
-      :max-height="200"
-      class="table teal lighten-5"
+      height="150"
+      class="table white lighten-5"
       light
     >
       <template v-slot:default>
@@ -61,7 +61,5 @@ export default {
 tbody tr {
   transition: all 0.3s ease-in-out;
 }
-tbody tr:hover {
-  background-color: white !important;
-}
+
 </style>

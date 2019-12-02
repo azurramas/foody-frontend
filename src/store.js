@@ -49,8 +49,7 @@ export default new Vuex.Store({
       this.state.login = true;
       this.state.user.username = payload;
     },
-    requestErr(state, payload) {
-      console.log(payload.status, payload.msg, payload.color);
+    snackbar(state, payload) {
       this.state.snackbar.status = payload.status;
       this.state.snackbar.message = payload.msg;
       this.state.snackbar.color = payload.color;
@@ -59,7 +58,7 @@ export default new Vuex.Store({
       this.state.myorders = payload;
     },
     saveRequests(state, payload) {
-      var requests = [payload.oid, payload.data]
+      var requests = [payload.oid, payload.data];
       this.state.requests.push(requests);
     }
   },
@@ -110,7 +109,7 @@ export default new Vuex.Store({
             msg: "Your request was sent successfully!",
             color: "success"
           };
-          context.commit("requestErr", snackbar);
+          context.commit("snackbar", snackbar);
         })
         .catch(() => {
           var snackbar = {
@@ -118,7 +117,7 @@ export default new Vuex.Store({
             msg: "Something went wrong. Please try again",
             color: "error"
           };
-          context.commit("requestErr", snackbar);
+          context.commit("snackbar", snackbar);
         });
     },
     getMyOrders(context) {
@@ -142,10 +141,57 @@ export default new Vuex.Store({
           var request = {
             oid: oid,
             data: res.data
-          }
+          };
           context.commit("saveRequests", request);
         })
         .catch(err => console.error(err));
+    },
+    deleteOrder(context, oid) {
+      return new axios.delete(this.state.service + "/order/" + oid, {
+        headers: {
+          Authorization: getCookie("token")
+        }
+      })
+        .then(() => {
+          var snackbar = {
+            status: true,
+            msg: "The order was deleted successfully.",
+            color: "success"
+          };
+          context.commit("snackbar", snackbar);
+          this.dispatch("getMyOrders");
+        })
+        .catch(() => {
+          var snackbar = {
+            status: true,
+            msg: "Something went wrong. Please try again",
+            color: "error"
+          };
+          context.commit("snackbar", snackbar);
+        });
+    },
+    addOrder(context, payload){
+      return new axios.post(this.state.service + "/order", payload, {
+        headers: {
+          Authorization: getCookie("token")
+        }
+      }).then(() => {
+        var snackbar = {
+          status: true,
+          msg: "The order was added successfully.",
+          color: "success"
+        };
+        context.commit("snackbar", snackbar);
+        this.dispatch("getMyOrders");
+      })
+      .catch(() => {
+        var snackbar = {
+          status: true,
+          msg: "Something went wrong. Please try again",
+          color: "error"
+        };
+        context.commit("snackbar", snackbar);
+      });
     }
   },
   modules: {},

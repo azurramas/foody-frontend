@@ -37,7 +37,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="teal darken-4" text @click="closeDialog">Close</v-btn>
-        <v-btn color="teal darken-4" text @click="sendRequest">Send</v-btn>
+        <v-btn color="teal darken-4" dark @click="sendRequest">Send</v-btn>
       </v-card-actions>
     </v-container>
   </v-card>
@@ -70,8 +70,7 @@ export default {
           request_content: this.requestContent,
           user_name: this.userName
         };
-        this.$emit("openSnack");
-
+        
         this.$store.dispatch("sendRequest", payload);
         this.requestContent = "";
         this.userName = "";

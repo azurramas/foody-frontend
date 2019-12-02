@@ -23,7 +23,6 @@
       <v-dialog v-model="dialog" width="600px" max-width="100%">
         <RequestDialog
           @closeDialog="dialog=false"
-          @openSnack="openSnackbar()"
           :oid="oid"
           :name="name"
           :comm="comm"
