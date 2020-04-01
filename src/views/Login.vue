@@ -8,7 +8,8 @@
           </v-toolbar>
           <v-card-text>
             <v-form @keyup.native.enter="login">
-              <v-text-field color="green darken-1"
+              <v-text-field
+                color="green darken-1"
                 v-model="username"
                 label="Username"
                 name="username"
@@ -16,7 +17,8 @@
                 type="text"
               />
 
-              <v-text-field color="green darken-1"
+              <v-text-field
+                color="green darken-1"
                 v-model="password"
                 id="password"
                 label="Password"
@@ -25,12 +27,7 @@
                 type="password"
               />
             </v-form>
-            <v-alert
-              v-if="$store.state.loginerr"
-              dense
-              outlined
-              type="error"
-            >Username or password incorrect.</v-alert>
+            <v-alert v-if="err" dense outlined type="error">Username or password incorrect.</v-alert>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -54,7 +51,8 @@ export default {
   data() {
     return {
       username: "",
-      password: ""
+      password: "",
+      err: false
     };
   },
   methods: {
@@ -64,10 +62,10 @@ export default {
         password: this.password
       };
 
-      this.$store
-        .dispatch("login", payload)
-        .then(() => {})
-        .catch(err => console.log(err));
+      this.$store.dispatch("login", payload)
+      .catch(err => {
+        if (err) this.err = true;
+      });
     }
   }
 };

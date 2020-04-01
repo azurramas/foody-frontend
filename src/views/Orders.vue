@@ -37,7 +37,7 @@ export default {
     ...mapGetters(["getterOrders"]),
     orders() {
       let orders = this.getterOrders;
-      return orders;
+      return orders.reverse();
     }
   },
   mounted() {

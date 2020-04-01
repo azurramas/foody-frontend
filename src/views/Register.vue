@@ -2,17 +2,30 @@
   <v-container class="fill-height" fluid>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="4">
-        <v-card class="elevation-6" >
+        <v-card class="elevation-6">
           <v-toolbar class="teal--text text--darken-4" flat>
             <v-toolbar-title>Register</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field label="Username" name="login" prepend-icon="mdi-account" type="text" />
+              <v-text-field
+                color="green darken-1"
+                label="Username"
+                name="login"
+                prepend-icon="mdi-account"
+                type="text"
+              />
 
               <v-text-field
-                id="password"
+                color="green darken-1"
                 label="Password"
+                name="password"
+                prepend-icon="mdi-lock"
+                type="password"
+              />
+              <v-text-field
+                color="green darken-1"
+                label="Confirm Password"
                 name="password"
                 prepend-icon="mdi-lock"
                 type="password"
@@ -30,7 +43,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+  
+};
 </script>
 
 <style>

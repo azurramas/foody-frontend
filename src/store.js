@@ -2,6 +2,8 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 
+// var socket = new WebSocket("ws://localhost:8010/ws");
+
 //Function to get cookie by name
 function getCookie(cname) {
   var name = cname + "=";
@@ -41,9 +43,6 @@ export default new Vuex.Store({
   mutations: {
     listOrders(state, data) {
       this.state.orders = data;
-    },
-    loginerr() {
-      this.state.loginerr = !this.state.loginerr;
     },
     login(state, payload) {
       this.state.login = true;
@@ -88,10 +87,6 @@ export default new Vuex.Store({
             window.location = "/";
           }
         })
-        .catch(err => {
-          context.commit("loginerr");
-          console.error(err);
-        });
     },
     clearCookie() {
       document.cookie =
@@ -170,28 +165,29 @@ export default new Vuex.Store({
           context.commit("snackbar", snackbar);
         });
     },
-    addOrder(context, payload){
+    addOrder(context, payload) {
       return new axios.post(this.state.service + "/order", payload, {
         headers: {
           Authorization: getCookie("token")
         }
-      }).then(() => {
-        var snackbar = {
-          status: true,
-          msg: "The order was added successfully.",
-          color: "success"
-        };
-        context.commit("snackbar", snackbar);
-        this.dispatch("getMyOrders");
       })
-      .catch(() => {
-        var snackbar = {
-          status: true,
-          msg: "Something went wrong. Please try again",
-          color: "error"
-        };
-        context.commit("snackbar", snackbar);
-      });
+        .then(() => {
+          var snackbar = {
+            status: true,
+            msg: "The order was added successfully.",
+            color: "success"
+          };
+          context.commit("snackbar", snackbar);
+          this.dispatch("getMyOrders");
+        })
+        .catch(() => {
+          var snackbar = {
+            status: true,
+            msg: "Something went wrong. Please try again",
+            color: "error"
+          };
+          context.commit("snackbar", snackbar);
+        });
     }
   },
   modules: {},
@@ -204,6 +200,21 @@ export default new Vuex.Store({
       if (token != "") return true;
 
       return false;
+    },
+    getCookie() {
+      var name = "token" + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(";");
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == " ") {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
     }
   }
 });

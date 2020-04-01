@@ -5,6 +5,10 @@
       style="margin-bottom: 50px"
     >My Orders</h1>
     <v-container style="margin-bottom: 50px;">
+      <h2
+        class="text-center font-weight-light"
+        v-if="orders == null"
+      >You have no active orders. To add one, click the green icon below.</h2>
       <v-row class="justify-center">
         <MyOrder
           :oid="order.id"
@@ -45,7 +49,12 @@ export default {
   computed: {
     orders() {
       var orders = this.$store.state.myorders;
-      return orders;
+
+      if (orders) {
+        return orders.reverse();
+      } else {
+        return null;
+      }
     }
   },
   mounted() {

@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-simple-table
-      height="150"
-      class="table white lighten-5"
-      light
-    >
+    <v-simple-table height="150" class="table white lighten-5" light>
       <template v-slot:default>
         <thead v-if="requests.length != 0">
           <tr>
@@ -13,7 +9,9 @@
           </tr>
         </thead>
         <tbody v-if="requests.length == 0 ">
-            <tr><td> No requests found for this order.</td></tr>
+          <tr>
+            <td>No requests found for this order.</td>
+          </tr>
         </tbody>
         <tbody v-if="requests.length != 0">
           <tr v-for="request in requests" :key="request.id">
@@ -29,7 +27,9 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      socket: undefined
+    };
   },
   props: {
     oid: Number
@@ -53,6 +53,13 @@ export default {
   },
   mounted() {
     this.$store.dispatch("getRequests", this.oid);
+    var socket = new WebSocket("ws://localhost:8010/ws/" + this.oid);
+    
+    socket.onmessage = () => {
+      this.$store.state.requests = [];
+      this.$store.dispatch("getRequests", this.oid);
+      
+    }
   }
 };
 </script>
@@ -61,5 +68,4 @@ export default {
 tbody tr {
   transition: all 0.3s ease-in-out;
 }
-
 </style>

@@ -7,15 +7,22 @@
       <v-container>
         <v-row>
           <v-col cols="12">
-            <v-text-field v-model="restaurant"
-            color="green darken-1"
+            <v-text-field
+              v-model="restaurant"
+              color="green darken-1"
               hint="Place where you'll order food"
               label="Restaurant - Food place*"
               required
             ></v-text-field>
           </v-col>
           <v-col cols="12">
-            <v-text-field v-model="comment" color="green darken-1" hint="eg. Please make a request by 11AM." label="My comment*" required></v-text-field>
+            <v-text-field
+              v-model="comment"
+              color="green darken-1"
+              hint="eg. Please make a request by 11AM."
+              label="My comment"
+              required
+            ></v-text-field>
           </v-col>
         </v-row>
         <v-alert v-model="error" dense outlined type="warning">Please fill in all required fields.</v-alert>
@@ -54,7 +61,7 @@ export default {
   },
   methods: {
     addOrder() {
-      if (/\S/.test(this.restaurant) || /\S/.test(this.comment)) {
+      if (/\S/.test(this.restaurant) && /\S/.test(this.comment)) {
         this.dialog = false;
         this.$emit("closeDialog");
 
@@ -62,7 +69,7 @@ export default {
           restaurant: this.restaurant,
           comment: this.comment
         };
-        
+
         this.$store.dispatch("addOrder", payload);
         this.restaurant = "";
         this.comment = "";
